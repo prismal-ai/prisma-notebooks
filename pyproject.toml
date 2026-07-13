@@ -1,0 +1,72 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "prisma-notebooks"
+version = "0.1.0"
+description = "Executable Jupyter notebooks for the Prismal framework"
+readme = "README.md"
+requires-python = ">=3.13"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Ernesto Crespo", email = "ecrespo@gmail.com" }]
+keywords = [
+  "prismal",
+  "langgraph",
+  "agents",
+  "rag",
+  "multimodal",
+  "notebooks",
+  "tutorials",
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Education",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Documentation",
+]
+
+dependencies = [
+  # Framework target
+  "prismal>=3.0.0",
+  # Notebook runtime
+  "jupyterlab>=4.3.0",
+  "ipykernel>=6.29.0",
+  "nest-asyncio>=1.6.0",
+  # Datasets / tabular
+  "pandas>=2.2.0",
+  "polars>=1.17.0",
+  # Vector store backing the RAG notebooks
+  "chromadb>=0.6.0",
+  # Optional viz
+  "matplotlib>=3.9.0",
+]
+
+[project.optional-dependencies]
+# Heavy ML extras for the ML pipeline subgraph notebook
+ml = ["prismal[ml]"]
+# Multimodal extras (Whisper, ElevenLabs, CLIP, etc.)
+multimodal = ["prismal[multimodal,multimodal-local,multimodal-embed]"]
+# Finance extras for the financial analyst notebook
+finance = ["prismal[finance]"]
+# Everything above
+all = ["prisma-notebooks[ml,multimodal,finance]"]
+
+# Resolve the framework from the local sibling checkout (not yet on PyPI)
+[tool.uv.sources]
+prismal = { path = "../prismal", editable = true }
+
+[project.urls]
+Homepage = "https://github.com/prismal-ai/prisma-notebooks"
+Repository = "https://github.com/prismal-ai/prisma-notebooks"
+Framework = "https://github.com/prismal-ai/prismal"
+
+[tool.hatch.build.targets.wheel]
+packages = ["notebooks"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"data" = "data"
