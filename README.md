@@ -2,7 +2,7 @@
 
 > Executable Jupyter notebooks for the **[Prismal](https://github.com/prismal-ai/prismal)** framework — reasoning patterns, RAG engines, subgraphs, multimodal layer and extension surface, all with real datasets.
 
-42 notebooks (`00_index.ipynb` + 41 examples) generated from the [`prismal/examples/`](https://github.com/prismal-ai/prismal/tree/main/examples) directory.
+74 notebooks (`00_index.ipynb` + 73 examples) generated from the [`prismal/examples/`](https://github.com/prismal-ai/prismal/tree/main/examples) directory.
 
 ---
 
@@ -33,12 +33,24 @@ prisma-notebooks/
 ├── notebooks/
 │   ├── 00_index.ipynb              ← navigable index
 │   ├── patterns/    (9 notebooks)
-│   ├── rag/         (9 notebooks)
+│   ├── rag/         (10 notebooks)
 │   ├── subgraphs/   (12 notebooks)
 │   ├── multimodal/  (5 notebooks)
 │   ├── extension/   (4 notebooks)
 │   ├── multimodal_pipeline.ipynb
-│   └── visualize_graphs.ipynb
+│   ├── visualize_graphs.ipynb
+│   ├── supervisor & multi-agent (4):      supervisor_quickstart, hierarchical_supervisor,
+│   │                                      parallel_research_fanout, subagent_spawner
+│   ├── specialized agents (5):            meta_learner, skill_creator_agent, memory_management,
+│   │                                      multimodal_ingestion, blind_review_pipeline
+│   ├── opt-in phases (9):                 kokoro_deliberation, skynet_{swarm,specialist_swarm,direct_api},
+│   │                                      budget_{governance,graph_integration},
+│   │                                      a2a_{server,remote_node,tool_provider}
+│   └── infrastructure & hardening (13):   composition_root, config_source_{env,custom},
+│                                          tool_provider_{host,custom}, vector_store_lancedb,
+│                                          node_typesafety, observability_integration,
+│                                          guardrails_modernization, loop_hardening,
+│                                          runtime_hardening, agent_eval, agent_identity
 ├── data/                           ← real datasets
 │   ├── arxiv/arxiv_papers.csv      (148 KB · 106 papers)
 │   ├── github-issues/github_issues.csv  (2.1 MB · 60,001 issues)
@@ -53,7 +65,7 @@ prisma-notebooks/
 
 ## Suggested execution order — from simplest to most complex
 
-This is the **recommended learning path**. Each level assumes concepts from the previous one. **41 notebooks across 9 levels**, ordered by increasing complexity.
+This is the **recommended learning path**. Each level assumes concepts from the previous one. **73 notebooks across 13 levels**, ordered by increasing complexity. Everything from Level 10 on runs **offline with injected fakes** (🔑 no API keys).
 
 ### Level 1 · Framework basics (5 notebooks · 🔑 no API keys)
 
@@ -141,6 +153,58 @@ LLM-router that delegates to a domain of agents; combine everything above.
 40. [`subgraphs/11_engineering_orchestrator.ipynb`](notebooks/subgraphs/11_engineering_orchestrator.ipynb) — `coder` | `codeact` | `planner` | `file_manager` | `skill_manager`.
 41. [`subgraphs/10_analysis_orchestrator.ipynb`](notebooks/subgraphs/10_analysis_orchestrator.ipynb) — `data_analyst` | `ml_pipeline` | `dev_pipeline` | `financial_analyst` (4 demo modes).
 
+### Level 10 · Supervisor & multi-agent (4 notebooks · 🔑 no API keys)
+
+The SUPERVISOR core itself — routing, hierarchy, fan-out — all rebuilt offline with deterministic fakes.
+
+42. [`supervisor_quickstart.ipynb`](notebooks/supervisor_quickstart.ipynb) — supervisor state machine + deterministic intent routing.
+43. [`hierarchical_supervisor.ipynb`](notebooks/hierarchical_supervisor.ipynb) — domain supervisors + network routing.
+44. [`parallel_research_fanout.ipynb`](notebooks/parallel_research_fanout.ipynb) — map-reduce fan-out/fan-in with `Send`.
+45. [`subagent_spawner.ipynb`](notebooks/subagent_spawner.ipynb) — concurrency semaphore, per-task timeouts, `cancel_all()`.
+
+### Level 11 · Specialized agents & memory (6 notebooks · 🔑 no API keys)
+
+Agent subsystems beyond the graph: self-improvement, skills, memory, media ingestion, review pipelines, federated retrieval.
+
+46. [`memory_management.ipynb`](notebooks/memory_management.ipynb) — short-term buffer, Markdown transcripts, long-term store with redaction.
+47. [`meta_learner.ipynb`](notebooks/meta_learner.ipynb) — score traces → flag → propose, with a human-review sentinel.
+48. [`skill_creator_agent.ipynb`](notebooks/skill_creator_agent.ipynb) — generate a skill offline: GENERATE → VALIDATE → WRITE → REPORT.
+49. [`multimodal_ingestion.ipynb`](notebooks/multimodal_ingestion.ipynb) — validate → sanitize → spill → audit media into `AgentState`.
+50. [`blind_review_pipeline.ipynb`](notebooks/blind_review_pipeline.ipynb) — spec → implement → two blind reviewers → synthesis → HITL.
+51. [`rag/10_federated_rag.ipynb`](notebooks/rag/10_federated_rag.ipynb) — federated multi-node RAG, fault-tolerant merge + re-rank.
+
+### Level 12 · Opt-in phases — Kokoro · Skynet · Budget · A2A (9 notebooks · 🔑 no API keys)
+
+The flag-gated layers: persona deliberation, swarm map-reduce, cost governance, agent-to-agent interop.
+
+52. [`kokoro_deliberation.ipynb`](notebooks/kokoro_deliberation.ipynb) — three souls argue, one judge decides (Fase K).
+53. [`skynet_swarm.ipynb`](notebooks/skynet_swarm.ipynb) — plan → `Send` fan-out → workers → reduce → evaluate (Fase S).
+54. [`skynet_direct_api.ipynb`](notebooks/skynet_direct_api.ipynb) — the same layer driven directly, plus deterministic re-plan.
+55. [`skynet_specialist_swarm.ipynb`](notebooks/skynet_specialist_swarm.ipynb) — specialist roles, metering, a faked remote A2A worker (Fase S+).
+56. [`budget_governance.ipynb`](notebooks/budget_governance.ipynb) — `CostMeter` + `BudgetGuard`: within → soft → hard (Phase C).
+57. [`budget_graph_integration.ipynb`](notebooks/budget_graph_integration.ipynb) — seed, guard, degrade, abort, clear at the graph seam.
+58. [`a2a_server.ipynb`](notebooks/a2a_server.ipynb) — expose prismal as an A2A agent: Agent Card + JSON-RPC/SSE (Phase I).
+59. [`a2a_remote_node.ipynb`](notebooks/a2a_remote_node.ipynb) — delegate to a remote agent as a graph node or as tools.
+60. [`a2a_tool_provider.ipynb`](notebooks/a2a_tool_provider.ipynb) — remote skills as `a2a__*` tools composed into `CompositeToolProvider`.
+
+### Level 13 · Infrastructure & hardening — Fases X/Y/Z/W/R + hardening phases (13 notebooks · 🔑 no API keys)
+
+The hexagonal ports and the production-hardening layers — how a host wires and defends the whole runtime.
+
+61. [`tool_provider_custom.ipynb`](notebooks/tool_provider_custom.ipynb) — the smallest `ToolProviderPort` (Fase Y).
+62. [`tool_provider_host.ipynb`](notebooks/tool_provider_host.ipynb) — host-style composite provider injection (Fase Y).
+63. [`vector_store_lancedb.ipynb`](notebooks/vector_store_lancedb.ipynb) — swap the vector-store backend by configuration (Fase Z).
+64. [`config_source_env.ipynb`](notebooks/config_source_env.ipynb) — inject the default env config source (Fase W).
+65. [`config_source_custom.ipynb`](notebooks/config_source_custom.ipynb) — Vault-style source + per-tenant settings (Fase W).
+66. [`composition_root.ipynb`](notebooks/composition_root.ipynb) — `build_runtime` / `build_test_runtime`, tenant isolation (Phase R).
+67. [`node_typesafety.ipynb`](notebooks/node_typesafety.ipynb) — node I/O contracts: off / warn / enforce (Phase NTS).
+68. [`observability_integration.ipynb`](notebooks/observability_integration.ipynb) — `ObservabilityPort`: run summaries, judge scores, dataset export (Phase OBS).
+69. [`guardrails_modernization.ipynb`](notebooks/guardrails_modernization.ipynb) — content-safety reasoning + `StructuredOutputGuard` (Phase GRD).
+70. [`loop_hardening.ipynb`](notebooks/loop_hardening.ipynb) — context compaction + phase-narrowed tool catalogue (Phase LH).
+71. [`runtime_hardening.ipynb`](notebooks/runtime_hardening.ipynb) — injection, output, tool-policy and runaway guards (Phase H).
+72. [`agent_eval.ipynb`](notebooks/agent_eval.ipynb) — `EvalRunner` harness over a scripted graph (Phase V).
+73. [`agent_identity.ipynb`](notebooks/agent_identity.ipynb) — DID identities, scoped vault secrets, policy engine, OBO tokens (Phase IDN).
+
 ---
 
 ## Included datasets
@@ -167,7 +231,7 @@ OPENAI_API_KEY=sk-...          # optional (Whisper, OpenAI fallback)
 PRISMAL_HIERARCHICAL_MODE=true # enables orchestrators (Level 9)
 ```
 
-**Notebooks without API keys (🔑):** all of Level 1 + 3 + part of Level 2; orchestrators run in simulation mode without network access.
+**Notebooks without API keys (🔑):** all of Level 1 + 3 + part of Level 2, plus **everything in Levels 10–13** (offline with injected fakes); orchestrators run in simulation mode without network access.
 
 **Notebooks with API keys (🔐):** all of RAG, MoA, ToT, Debate (real LLM mode), HITL Approval and the advanced subgraphs.
 
