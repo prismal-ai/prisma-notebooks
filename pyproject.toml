@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "prisma-notebooks"
-version = "0.1.0"
+version = "0.2.0"
 description = "Executable Jupyter notebooks for the Prismal framework"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -32,7 +32,7 @@ classifiers = [
 
 dependencies = [
   # Framework target
-  "prismal>=3.0.0",
+  "prismal-ai>=3.22.1",
   # Notebook runtime
   "jupyterlab>=4.3.0",
   "ipykernel>=6.29.0",
@@ -48,17 +48,41 @@ dependencies = [
 
 [project.optional-dependencies]
 # Heavy ML extras for the ML pipeline subgraph notebook
-ml = ["prismal[ml]"]
+ml = ["prismal-ai[ml]"]
 # Multimodal extras (Whisper, ElevenLabs, CLIP, etc.)
-multimodal = ["prismal[multimodal,multimodal-local,multimodal-embed]"]
+multimodal = ["prismal-ai[multimodal,multimodal-local,multimodal-embed]"]
 # Finance extras for the financial analyst notebook
-finance = ["prismal[finance]"]
+finance = ["prismal-ai[finance]"]
 # Everything above
 all = ["prisma-notebooks[ml,multimodal,finance]"]
 
-# Resolve the framework from the local sibling checkout (not yet on PyPI)
+# Resolve the framework from the local sibling checkout (published on PyPI as prismal-ai)
 [tool.uv.sources]
-prismal = { path = "../prismal", editable = true }
+prismal-ai = { path = "../prismal", editable = true }
+
+# Mirror prismal's supply-chain policy so this lock never pulls a version the
+# framework itself refuses (see prismal/pyproject.toml [tool.uv] for the CVE
+# rationale and the TRIGGER to drop each override).
+[tool.uv]
+exclude-newer = "7 days"
+override-dependencies = ["pillow>=13.0.0", "filelock>=4.2.1"]
+constraint-dependencies = [
+  "litellm!=1.107.0",       # compromised release (2026-10-21)
+  "litellm>=1.100.4",       # CVE-2026-114612
+  "langgraph-sdk>=0.4.6",   # CVE-2026-118667
+  "msgpack>=1.2.3",         # CVE-2026-114613
+  "pyasn1>=0.6.5",          # CVE-2026-119194..119197
+  "dnspython>=2.9.0",       # CVE-2026-114605
+  "nltk>=3.10.4",           # GHSA-j456-xh4h-cpf2
+  "pymongo>=4.18.3",        # CVE-2026-106435
+  "virtualenv>=21.14.13",   # CVE-2026-115586
+  "pypdf>=6.21.4",          # 10 CVEs (2026-11)
+]
+
+# Same cooldown exemptions as prismal; remove both after 2026-11-05.
+[tool.uv.exclude-newer-package]
+pyasn1 = "2026-10-28T00:00:00Z"
+pypdf = "2026-10-29T00:00:00Z"
 
 [project.urls]
 Homepage = "https://github.com/prismal-ai/prisma-notebooks"

@@ -2,7 +2,7 @@
 
 > Executable Jupyter notebooks for the **[Prismal](https://github.com/prismal-ai/prismal)** framework — reasoning patterns, RAG engines, subgraphs, multimodal layer and extension surface, all with real datasets.
 
-74 notebooks (`00_index.ipynb` + 73 examples) generated from the [`prismal/examples/`](https://github.com/prismal-ai/prismal/tree/main/examples) directory.
+84 notebooks (`00_index.ipynb` + 83 examples) for **prismal-ai 3.22.1**: 81 follow the [`prismal/examples/`](https://github.com/prismal-ai/prismal/tree/main/examples) directory and 2 are written directly against prismal modules that have no standalone example (`decisions_hitl_gate`, `observation_masking`).
 
 ---
 
@@ -46,15 +46,20 @@ prisma-notebooks/
 │   ├── opt-in phases (9):                 kokoro_deliberation, skynet_{swarm,specialist_swarm,direct_api},
 │   │                                      budget_{governance,graph_integration},
 │   │                                      a2a_{server,remote_node,tool_provider}
-│   └── infrastructure & hardening (13):   composition_root, config_source_{env,custom},
-│                                          tool_provider_{host,custom}, vector_store_lancedb,
-│                                          node_typesafety, observability_integration,
-│                                          guardrails_modernization, loop_hardening,
-│                                          runtime_hardening, agent_eval, agent_identity
+│   ├── infrastructure & hardening (13):   composition_root, config_source_{env,custom},
+│   │                                      tool_provider_{host,custom}, vector_store_lancedb,
+│   │                                      node_typesafety, observability_integration,
+│   │                                      guardrails_modernization, loop_hardening,
+│   │                                      runtime_hardening, agent_eval, agent_identity
+│   └── wave 2026-10 (10):                 token_efficiency, observation_masking,
+│                                          gateways_{openrouter,opencode,omniroute},
+│                                          typed_decisions, decisions_hitl_gate,
+│                                          adaptive_routing, agui_translate, agentic_memory
 ├── data/                           ← real datasets
 │   ├── arxiv/arxiv_papers.csv      (148 KB · 106 papers)
 │   ├── github-issues/github_issues.csv  (2.1 MB · 60,001 issues)
 │   └── medquad/medquad.csv         (22 MB · 60,049 medical QA)
+├── tools/notebook_builder/         ← source of the wave 2026-10 notebooks (build + execute)
 ├── README.md
 ├── pyproject.toml
 ├── LICENSE
@@ -65,7 +70,7 @@ prisma-notebooks/
 
 ## Suggested execution order — from simplest to most complex
 
-This is the **recommended learning path**. Each level assumes concepts from the previous one. **73 notebooks across 13 levels**, ordered by increasing complexity. Everything from Level 10 on runs **offline with injected fakes** (🔑 no API keys).
+This is the **recommended learning path**. Each level assumes concepts from the previous one. **83 notebooks across 14 levels**, ordered by increasing complexity. Everything from Level 10 on runs **offline with injected fakes** (🔑 no API keys).
 
 ### Level 1 · Framework basics (5 notebooks · 🔑 no API keys)
 
@@ -205,6 +210,21 @@ The hexagonal ports and the production-hardening layers — how a host wires and
 72. [`agent_eval.ipynb`](notebooks/agent_eval.ipynb) — `EvalRunner` harness over a scripted graph (Phase V).
 73. [`agent_identity.ipynb`](notebooks/agent_identity.ipynb) — DID identities, scoped vault secrets, policy engine, OBO tokens (Phase IDN).
 
+### Level 14 · Wave 2026-10 — TKE · GW · DEC · AMR · PRT · MEM (10 notebooks · 🔑 no API keys)
+
+The six opt-in layers released in prismal 3.13 → 3.22: spend fewer tokens, route through gateways, answer closed questions without the LLM, pick the model per call, stream to front-ends, and remember across sessions. Every layer is off by default, and with it off the graph is unchanged. These notebooks run **step by step** (no `main()` to uncomment) and ship with their outputs.
+
+74. [`token_efficiency.ipynb`](notebooks/token_efficiency.ipynb) — cache-aware accounting, cache-stable prompt, cache breakpoints, tool-output budget, TOON (Phase TKE).
+75. [`observation_masking.ipynb`](notebooks/observation_masking.ipynb) — old tool observations → artifact store + in-place stubs, scoped `read_artifact` (TKE4, 3.20.0).
+76. [`gateways_openrouter.ipynb`](notebooks/gateways_openrouter.ipynb) — `gw:` refs, privacy defaults, no double fallback, billed cost (Phase GW).
+77. [`gateways_opencode.ipynb`](notebooks/gateways_opencode.ipynb) — per-model wire protocols, coding-agent ToS guard, flat-fee quota ledger (Phase GW).
+78. [`gateways_omniroute.ipynb`](notebooks/gateways_omniroute.ipynb) — self-hosted gateway behind a fail-closed startup gate (Phase GW).
+79. [`typed_decisions.ipynb`](notebooks/typed_decisions.ipynb) — calibration, cascade routing, taint escalation, option-order shuffle (Phase DEC).
+80. [`decisions_hitl_gate.ipynb`](notebooks/decisions_hitl_gate.ipynb) — one-way human-review gate from five concrete questions (DEC7, 3.19.0).
+81. [`adaptive_routing.ipynb`](notebooks/adaptive_routing.ipynb) — tier map, cascade + affinity, risk floors, budget downgrade, batch assignment (Phase AMR).
+82. [`agui_translate.ipynb`](notebooks/agui_translate.ipynb) — LangGraph `astream` → AG-UI 1.0 SSE frames + 12-key usage wire (Phase PRT).
+83. [`agentic_memory.ipynb`](notebooks/agentic_memory.ipynb) — typed writes, taint, consolidation, budgeted recall, tenancy, rule/HITL-only forget (Phase MEM).
+
 ---
 
 ## Included datasets
@@ -231,7 +251,7 @@ OPENAI_API_KEY=sk-...          # optional (Whisper, OpenAI fallback)
 PRISMAL_HIERARCHICAL_MODE=true # enables orchestrators (Level 9)
 ```
 
-**Notebooks without API keys (🔑):** all of Level 1 + 3 + part of Level 2, plus **everything in Levels 10–13** (offline with injected fakes); orchestrators run in simulation mode without network access.
+**Notebooks without API keys (🔑):** all of Level 1 + 3 + part of Level 2, plus **everything in Levels 10–14** (offline with injected fakes); orchestrators run in simulation mode without network access.
 
 **Notebooks with API keys (🔐):** all of RAG, MoA, ToT, Debate (real LLM mode), HITL Approval and the advanced subgraphs.
 
@@ -243,6 +263,8 @@ PRISMAL_HIERARCHICAL_MODE=true # enables orchestrators (Level 9)
 2. **Cell 1** — installs/applies `nest_asyncio` so that `await main()` works in cells.
 3. **Cells 2…N** — alternating markdown/code following the sections of the original `.py`.
 4. **Final cell** — `# await main()` ready to uncomment.
+
+The **Level 14** (wave 2026-10) notebooks keep cells 0–1 but replace the `main()` structure with one cell per step, executed top to bottom with top-level `await`. They are committed **with their outputs** (deterministic, offline), so the expected result is visible before running.
 
 The 4 notebooks that read local datasets have two extra cells after `nest_asyncio`:
 - Markdown explaining that `data/` is searched from the cwd.
@@ -269,13 +291,20 @@ python _generator/migrate_to_new_repo.py   # re-sync this repo
 
 The generator parses the module docstring and section comments, producing notebooks with alternating markdown/code cells.
 
+> The `notebooks/_generator/` folder referenced above is no longer in the prismal repo. The Level 14 notebooks are built from [`tools/notebook_builder/`](tools/notebook_builder/) instead: each notebook is a list of markdown/code cells in `cells/<name>.py`.
+>
+> ```bash
+> uv run python tools/notebook_builder/build.py                 # rewrite notebooks/<name>.ipynb
+> uv run python tools/notebook_builder/build.py --execute       # … and execute them, saving outputs
+> ```
+
 ---
 
 ## Resources
 
 - Prismal framework: <https://github.com/prismal-ai/prismal>
 - Documentation: <https://prismal.dev/docs> *(planned)*
-- PyPI: <https://pypi.org/project/prismal>
+- PyPI: <https://pypi.org/project/prismal-ai>
 - Source examples: <https://github.com/prismal-ai/prismal/tree/main/examples>
 - Hands-on guide with datasets (Obsidian): `Documentation/Prismal/Prismal-Datasets-Usage-Guide.md`
 
