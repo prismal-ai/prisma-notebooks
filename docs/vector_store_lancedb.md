@@ -10,7 +10,7 @@ This notebook performs the swap that motivates the design: it flips one settings
 
 - A configuration-only backend swap: `Settings(vector_store_backend="lancedb", vector_store_path=...)` is the entire change; every RAG/memory consumer works unchanged.
 - The factory as the single construction point: `VectorStoreFactory.create(settings, collection_name)` returns a `VectorStorePort`, never a concrete class in consumer code.
-- Graceful degradation when the extra is missing: backend SDK imports are deferred inside each adapter, so an absent `lancedb` package surfaces as a catchable `VectorStoreBackendUnavailable` pointing at `pip install 'prismal[lancedb]'` — not an `ImportError` at module import time.
+- Graceful degradation when the extra is missing: backend SDK imports are deferred inside each adapter, so an absent `lancedb` package surfaces as a catchable `VectorStoreBackendUnavailable` pointing at `pip install 'prismal-ai[lancedb]'` — not an `ImportError` at module import time.
 - Structural conformance via `conforms_to(store, VectorStorePort)` — the port is a `@runtime_checkable` Protocol.
 - The score contract (SPEC-VS-002): `similarity_search` returns `(Document, score)` tuples with `score ∈ [0, 1]`, higher = more relevant, regardless of the backend's native metric.
 
@@ -43,7 +43,7 @@ try:
 except VectorStoreBackendUnavailable as exc:
     # The base install does not ship LanceDB; the error guides to the extra.
     print(exc)
-    print("Install it with: pip install 'prismal[lancedb]'")
+    print("Install it with: pip install 'prismal-ai[lancedb]'")
     return
 ```
 
@@ -110,7 +110,7 @@ uv run jupyter lab notebooks/vector_store_lancedb.ipynb
 uv run python examples/vector_store_lancedb.py   # from the prismal repo
 ```
 
-No API key is required — the demo runs offline. The notebook's final cell ships with the sync entry point commented out (`# main()`); uncomment and run it (no `await` needed). To actually exercise the LanceDB path you need the extra installed — `pip install 'prismal[lancedb]'` — otherwise the demo still runs but takes the `VectorStoreBackendUnavailable` branch and prints the install hint, which is itself half the lesson.
+No API key is required — the demo runs offline. The notebook's final cell ships with the sync entry point commented out (`# main()`); uncomment and run it (no `await` needed). To actually exercise the LanceDB path you need the extra installed — `pip install 'prismal-ai[lancedb]'` — otherwise the demo still runs but takes the `VectorStoreBackendUnavailable` branch and prints the install hint, which is itself half the lesson.
 
 ## Related
 
